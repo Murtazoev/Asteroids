@@ -14,7 +14,7 @@ bool Engine::Init()
         cout << "Failed to Initialize SDL .... " << endl ;
         return false ;
     }
-    window = SDL_CreateWindow("Asteroids" , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , 900 , 900 , 0) ;
+    window = SDL_CreateWindow("Asteroids" , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , 1000 , 1000 , 0) ;
     if (window == nullptr)
     {
         cout << "Can not create a window ...." << endl ;
