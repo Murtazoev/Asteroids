@@ -2,6 +2,8 @@
 #include <iostream>
 #include <TextureManager.h>
 #include<SDL2/SDL.h>
+#include "Vector 2D.h"
+#include<Transform.h>
 
 using namespace std ;
 
@@ -26,8 +28,13 @@ bool Engine::Init()
         cout << "Can not render ... " << endl ;
         return false ;
     }
-
     TextureManager::GetInstance()->Load("background" , "Assets/background.jpg") ;
+
+    cout << "I am here" << endl ;
+
+    Transform tf;
+    tf.Log() ;
+
     return true ;
 }
 
@@ -54,7 +61,7 @@ void Engine::Render()
 {
     SDL_SetRenderDrawColor(renderer , 125 , 55 , 254 , 255) ;
     SDL_RenderClear(renderer) ;
-    TextureManager::GetInstance()->Draw("background" , 0 , 0 , 900 , 900) ;
+    TextureManager::GetInstance()->Draw("background" , 0 , 0 , 1000 , 1000) ;
     SDL_RenderPresent(renderer) ;
 }
 

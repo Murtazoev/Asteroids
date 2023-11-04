@@ -3,18 +3,20 @@
 
 TextureManager* TextureManager::s_Instance = nullptr ;
 
+using namespace std ;
+
 bool TextureManager::Load(string id, string filename)
 {
     SDL_Surface* surface = IMG_Load(filename.c_str()) ;
     if (surface == nullptr)
     {
-        SDL_Log("Failed to load texture: %s %s") ;
+        cout << "Failed to load surface in Texture Manager !!!" << endl ;
         return false ;
     }
     SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer() , surface) ;
     if (texture == nullptr)
     {
-        SDL_Log("Failed to create texture from surface: %s") ;
+        cout << "Failed to create texture from surface in Texture Manager !!!" << endl ;
         return false ;
     }
 
