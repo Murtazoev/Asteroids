@@ -30,3 +30,27 @@
 	<iostream>
 	<Vector 2D.h>
 
+1700314783 source:d:\projects\main.cpp
+	<Engine.h>
+
+1700315119 d:\projects\source\core\engine.h
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+
+1700314783 source:d:\projects\source\core\engine.cpp
+	"Engine.h"
+	<iostream>
+	<TextureManager.h>
+	<SDL2/SDL.h>
+	"Vector 2D.h"
+	<Transform.h>
+
+1700314783 d:\projects\source\graphics\texturemanager.h
+	<map>
+	<iostream>
+	<SDL2/SDL.h>
+
+1700314783 source:d:\projects\source\graphics\texturemanager.cpp
+	"TextureManager.h"
+	<Engine.h>
+
