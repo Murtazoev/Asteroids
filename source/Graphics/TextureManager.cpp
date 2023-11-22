@@ -47,3 +47,11 @@ void TextureManager::Draw(string id, int x, int y, int width, int height, SDL_Re
 
     SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer() , m_TextureMap[id] , &sourceRect , &destinationRect , 0 , nullptr , flip) ;
 }
+
+void TextureManager::DrawFrame(string id , int x , int y , int width , int height , int row , int frame , SDL_RendererFlip flip)
+{
+    SDL_Rect sourceRect = {width*frame , height*row , width , height} ;
+    SDL_Rect destinationRect = {x , y , width , height} ;
+
+    SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer() , m_TextureMap[id] , &sourceRect , &destinationRect , 0 , nullptr , flip) ;
+}

@@ -1,14 +1,13 @@
 #include "Engine.h"
-#include <iostream>
 #include <TextureManager.h>
-#include<SDL2/SDL.h>
-#include "Vector 2D.h"
 #include<Transform.h>
+#include<Warrior.h>
 
 
 using namespace std ;
 
 Engine* Engine::s_Instance = nullptr ;
+Warrior* player = nullptr ;
 
 bool Engine::Init()
 {
@@ -29,13 +28,12 @@ bool Engine::Init()
         cout << "Can not render ... " << endl ;
         return false ;
     }
+    TextureManager::GetInstance()->Load("player" , "Assets/ship.png") ;
     TextureManager::GetInstance()->Load("background" , "Assets/background.jpg") ;
 
-    cout << "I am here" << endl ;
-
+    player = new Warrior(new Properties("player" , 100 , 200 , 512 , 512)) ;
     Transform tf;
     tf.Log() ;
-
     return true ;
 }
 
@@ -55,7 +53,7 @@ void Engine::Quit()
 
 void Engine::Update()
 {
-    cout << "It Is Working ...." << endl ;
+    player->Update(0) ;
 }
 
 void Engine::Render()
@@ -63,6 +61,7 @@ void Engine::Render()
     SDL_SetRenderDrawColor(renderer , 125 , 55 , 254 , 255) ;
     SDL_RenderClear(renderer) ;
     TextureManager::GetInstance()->Draw("background" , 0 , 0 , 1000 , 1000) ;
+    player->Draw() ;
     SDL_RenderPresent(renderer) ;
 }
 

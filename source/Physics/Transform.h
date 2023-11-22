@@ -2,7 +2,8 @@
 #define TRANSFORM_H
 
 #include<iostream>
-#include<Vector 2D.h>
+#include<Vector2D.h>
+#include<SDL2/SDL.h>
 
 using namespace std ;
 
@@ -15,7 +16,7 @@ class Transform
         Transform(float x = 0 , float y = 0 ): X(x) , Y(y) {}
         void Log(string msg = "")
         {
-            cout << msg << "X , Y : " << X << " " << Y << endl ;
+            cout << msg << "X , Y ! " << X << " " << Y << endl ;
         }
 
     private:
