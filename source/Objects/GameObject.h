@@ -39,7 +39,7 @@ class GameObject : public IObject
 
     protected:
         Transform* m_Transform ;
-        int m_Width, m_Height ;
+        int m_Width, m_Height , m_Angle ;
         string m_TextureID ;
         SDL_RendererFlip m_Flip ;
 };

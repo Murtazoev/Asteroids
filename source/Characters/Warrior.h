@@ -11,7 +11,9 @@ class Warrior: public Character
 
         virtual void Draw() ;
         virtual void Clean() ;
+        virtual void Drop(string id) ;
         virtual void Update(float dt) ;
+        int Angle ;
 
     private:
         int m_Row , m_Frame , m_FrameCount , m_AnimSpeed ;

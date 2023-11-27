@@ -44,14 +44,27 @@ void TextureManager::Draw(string id, int x, int y, int width, int height, SDL_Re
 {
     SDL_Rect sourceRect = {0 , 0 , width , height} ;
     SDL_Rect destinationRect = {x , y , width , height} ;
-
+    if (id == "gameover")
+        destinationRect = {x , y , 1000 , 340} ;
+    if (id == "congragulations")
+        destinationRect = {x , y , 500 , 500} ;
+    if (id == "score")
+        destinationRect = {x , y , 200 , 112} ;
     SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer() , m_TextureMap[id] , &sourceRect , &destinationRect , 0 , nullptr , flip) ;
 }
 
-void TextureManager::DrawFrame(string id , int x , int y , int width , int height , int row , int frame , SDL_RendererFlip flip)
+void TextureManager::DrawFrame(string id , float x , float y , int width , int height , int angle , int row , int frame , SDL_RendererFlip flip)
 {
     SDL_Rect sourceRect = {width*frame , height*row , width , height} ;
-    SDL_Rect destinationRect = {x , y , width , height} ;
-
-    SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer() , m_TextureMap[id] , &sourceRect , &destinationRect , 0 , nullptr , flip) ;
+    SDL_Rect destinationRect = {x , y , 50 , 50} ;
+    if (id == "asteroid")
+        destinationRect = {x , y , 50 , 50} ;
+    else if (id == "player")
+        destinationRect = {x , y , 100 , 100 } ;
+    else if (id == "shoot")
+        destinationRect = {x , y , 30 , 30} ;
+    else if (id == "Deleted")
+        destinationRect = {x , y , 0 , 0} ;
+    SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer() , m_TextureMap[id] , &sourceRect , &destinationRect , angle , nullptr , flip) ;
+    // SDL_RenderDrawRect(Engine::GetInstance()->GetRenderer() , &asd) ;
 }

@@ -54,26 +54,36 @@
 	"TextureManager.h"
 	<Engine.h>
 
-1700608271 source:d:\projects\asteroids\main.cpp
+1701046180 source:d:\projects\asteroids\main.cpp
 	<Engine.h>
 	<iostream>
 
-1700327237 d:\projects\asteroids\source\core\engine.h
+1701046184 d:\projects\asteroids\source\core\engine.h
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
+	<SDL2/SDL_ttf.h>
 
-1700683301 source:d:\projects\asteroids\source\core\engine.cpp
+1701045754 source:d:\projects\asteroids\source\core\engine.cpp
 	"Engine.h"
 	<TextureManager.h>
 	<Transform.h>
 	<Warrior.h>
+	<windows.h>
+	<Asteroids.h>
+	<deque>
+	<Shooting.h>
+	<cmath>
+	<algorithm>
+	<conio.h>
+	<thread>
+	<SDL2/SDL_ttf.h>
 
-1700600870 d:\projects\asteroids\source\graphics\texturemanager.h
+1700932186 d:\projects\asteroids\source\graphics\texturemanager.h
 	<map>
 	<iostream>
 	<SDL2/SDL.h>
 
-1700602648 source:d:\projects\asteroids\source\graphics\texturemanager.cpp
+1701045878 source:d:\projects\asteroids\source\graphics\texturemanager.cpp
 	"TextureManager.h"
 	<Engine.h>
 
@@ -85,13 +95,13 @@
 	<Vector2D.h>
 	<SDL2/SDL.h>
 
-1700683362 source:d:\projects\asteroids\source\characters\warrior.cpp
+1700873172 source:d:\projects\asteroids\source\characters\warrior.cpp
 	"Warrior.h"
 	<TextureManager.h>
 	<SDL2/SDL.h>
 	<iostream>
 
-1700608392 d:\projects\asteroids\source\characters\warrior.h
+1700875675 d:\projects\asteroids\source\characters\warrior.h
 	<Character.h>
 	<iostream>
 
@@ -99,9 +109,25 @@
 	<GameObject.h>
 	<string>
 
-1700604396 d:\projects\asteroids\source\objects\gameobject.h
+1700875729 d:\projects\asteroids\source\objects\gameobject.h
 	<IObject.h>
 	<Transform.h>
 
 1700604266 d:\projects\asteroids\source\objects\iobject.h
+
+1700885395 source:d:\projects\asteroids\source\characters\asteroids.cpp
+	"Asteroids.h"
+	<TextureManager.h>
+	<SDL2/SDL.h>
+	<iostream>
+
+1700875699 d:\projects\asteroids\source\characters\asteroids.h
+	<Character.h>
+
+1700934729 source:d:\projects\asteroids\source\characters\shooting.cpp
+	"Shooting.h"
+
+1700941826 d:\projects\asteroids\source\characters\shooting.h
+	<Character.h>
+	<TextureManager.h>
 
