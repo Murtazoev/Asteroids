@@ -15,6 +15,9 @@
 					<Add option="-g" />
 					<Add directory="source/Core" />
 					<Add directory="source/Graphics" />
+					<Add directory="source/Objects" />
+					<Add directory="source/Physics" />
+					<Add directory="source/Characters" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -26,6 +29,9 @@
 					<Add option="-O2" />
 					<Add directory="source/Core" />
 					<Add directory="source/Graphics" />
+					<Add directory="source/Objects" />
+					<Add directory="source/Physics" />
+					<Add directory="source/Characters" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -36,10 +42,27 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="source/Characters/Asteroids.cpp" />
+		<Unit filename="source/Characters/Asteroids.h" />
+		<Unit filename="source/Characters/Character.h" />
+		<Unit filename="source/Characters/Shooting.cpp" />
+		<Unit filename="source/Characters/Shooting.h" />
+		<Unit filename="source/Characters/Warrior.cpp" />
+		<Unit filename="source/Characters/Warrior.h" />
+		<Unit filename="source/Core/ButtonCoolDown.cpp" />
+		<Unit filename="source/Core/ButtonCoolDown.h" />
 		<Unit filename="source/Core/Engine.cpp" />
 		<Unit filename="source/Core/Engine.h" />
+		<Unit filename="source/Core/Game.cpp" />
+		<Unit filename="source/Core/Game.h" />
+		<Unit filename="source/Core/MainMenu.cpp" />
+		<Unit filename="source/Core/MainMenu.h" />
 		<Unit filename="source/Graphics/TextureManager.cpp" />
 		<Unit filename="source/Graphics/TextureManager.h" />
+		<Unit filename="source/Objects/GameObject.h" />
+		<Unit filename="source/Objects/IObject.h" />
+		<Unit filename="source/Physics/Transform.h" />
+		<Unit filename="source/Physics/Vector2D.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

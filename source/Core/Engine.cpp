@@ -1,68 +1,60 @@
 #include "Engine.h"
 #include <TextureManager.h>
-#include<Transform.h>
-#include<Warrior.h>
 #include<windows.h>
-#include<Asteroids.h>
-// #include<bits/stdc++.h>
-#include<deque>
-#include<Shooting.h>
-#include<cmath>
-#include<algorithm>
-#include<conio.h>
-#include<thread>
-#include<SDL2/SDL_ttf.h>
+#include<Game.h>
 
-using namespace std ;
+using namespace std ; // delete this
+// 1. Write your functions in camelCase or snake_case
+// 2. Move the global variables into classes
+// 3. Read about "Separation of concern"
+// 4. Read about enum.
+// 5. Write inital variable as constant, don't hard code value.
+// 6. DRY principle
+// 7. Code formatter: clang-format
+// 8. pragma once
 
 Engine* Engine::s_Instance = nullptr ;
-Warrior* player = nullptr ;
-Asteroids* asteroid = nullptr ;
-Shooting* shot = nullptr ;
-deque < Asteroids* > ast ;
-deque < Shooting* > shots ;
-int x , y , score ;
 
-std::chrono::steady_clock::time_point cooldownEndTime;
-bool isButtonBlocked = false;
-bool GameOver = false ;
-bool Won = false ;
-
-void startCooldown() {
-    isButtonBlocked = true;
-    cooldownEndTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
-}
-
-bool isCooldownActive() {
-    return isButtonBlocked && std::chrono::steady_clock::now() < cooldownEndTime;
-}
-
-bool Engine::Init()
+bool Engine::BuilWindow()
 {
-    score = 0 ;
-    m_IsRunnin = true ;
-    GameOver = false ;
-    Won = false ;
-    shots.clear() ;
-    ast.clear() ;
-    x = y = 500 ;
     if (SDL_Init(SDL_INIT_VIDEO) != 0 and IMG_Init(IMG_INIT_JPG or IMG_INIT_PNG) != 0 )
     {
         cout << "Failed to Initialize SDL .... " << endl ;
         return false ;
     }
-    window = SDL_CreateWindow("Asteroids" , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , 1000 , 1000 , 0) ;
+    window = SDL_CreateWindow("Asteroids" , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , WINDOW_SIZE , WINDOW_SIZE , 0) ;
     if (window == nullptr)
     {
         cout << "Can not create a window ...." << endl ;
         return false ;
     }
-    renderer = SDL_CreateRenderer(window , -1 , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC) ;
+    MainMenu = true ;
+    Menu = false ;
+    return true ;
+}
+
+
+bool Engine::Init()
+{
+    ShipWidth = ShipHeight = 512 ;
+    // NumberOfAsteroids = 1 ;
+    score = 0 ;
+    // AsteroidsSpeed = 10 ;
+    m_IsRunnin = true ;
+    GameOver = false ;
+    Won = false ;
+    Menu = false ;
+    shots.clear() ;
+    ast.clear() ;
+    ShipPositionX = ShipPositionY = PLAYER_INITIAL_POSITION;
+        /// Setting the Standard values
+    renderer = SDL_CreateRenderer(window , -1 , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr)
     {
         cout << "Can not render ... " << endl ;
         return false ;
     }
+        /// Creating the Window and Renderer
     TextureManager::GetInstance()->Load("player" , "Assets/ship.png") ;
     TextureManager::GetInstance()->Load("background" , "Assets/background.jpg") ;
     TextureManager::GetInstance()->Load("asteroid" , "Assets/asteroid.png" ) ;
@@ -80,134 +72,107 @@ bool Engine::Init()
     TextureManager::GetInstance()->Load("n7" , "Assets/numbers/7.png") ;
     TextureManager::GetInstance()->Load("n8" , "Assets/numbers/8.png") ;
     TextureManager::GetInstance()->Load("n9" , "Assets/numbers/9.png") ;
+    TextureManager::GetInstance()->Load("button1" , "Assets/button1.png") ;
+    TextureManager::GetInstance()->Load("button2" , "Assets/button2.png") ;
+    TextureManager::GetInstance()->Load("button3" , "Assets/button3.png") ;
+    TextureManager::GetInstance()->Load("Resume" , "Assets/Resume.png") ;
+    TextureManager::GetInstance()->Load("Restart" , "Assets/Restart.png") ;
+    TextureManager::GetInstance()->Load("Quit" , "Assets/Quit.png") ;
 
-    for (int i = 0 ; i < 10 ; i ++ )
-    {
-        int speed ;
-        int x , y , z ;
-        speed = 10 ;
-        x = rand() % 900 ;
-        y = rand() % 900 ;
-        asteroid = new Asteroids(new Properties("asteroid" , x , y , 800 , 800)) ;
-        asteroid->CurX = x ;
-        asteroid->CurY = y ;
-        z = rand() % 2 ;
-        x = rand() % speed ;
-        if (z == 0)
-            x *= -1 ;
-        z = rand() % 2 ;
-        y = rand() % speed ;
-        if (z == 0)
-            y *= -1 ;
-        asteroid->DestX = x ;
-        asteroid->DestY = y ;
-        ast.push_back(asteroid) ;
-    }
-
-    player = new Warrior(new Properties("player" , 500 , 500 , 512 , 512)) ;
-
+    player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
+    EnterButton = new ButtonCoolDown() ;
+    /*
     Transform tf;
     tf.Log() ;
+    */
+    if (MainMenu == false)
+        CreateAsteroids() ;
     return true ;
 }
+
+void Engine::CreateAsteroids()
+{
+    for (int i = 0 ; i < NumberOfAsteroids ; i ++ )
+    {
+        int ShipPositionX , ShipPositionY , z ;
+        // AsteroidsSpeed = 10 ;
+        ShipPositionX = rand() % WINDOW_SIZE ; // fix this
+        ShipPositionY = 0 ; // where are these numbers coming
+        asteroid = new Asteroids(new Properties("asteroid" , ShipPositionX , ShipPositionY , 800 , 800)) ;
+        asteroid->CurX = ShipPositionX ;
+        asteroid->CurY = ShipPositionY ;
+        // Code duplication, DRY
+        z = rand() % 2 ;
+        ShipPositionX = rand() % AsteroidsSpeed ;
+        if (z == 0)
+            ShipPositionX *= -1 ;
+
+        // ShipPositionY = getRandomR
+        z = rand() % 2 ;
+        ShipPositionY = rand() % AsteroidsSpeed ;
+        if (z == 0)
+            ShipPositionY *= -1;
+
+
+        asteroid->DestX = ShipPositionX ;
+        asteroid->DestY = ShipPositionY ;
+        ast.push_back(asteroid) ;
+    }
+    // Init() ;
+}
+
 
 bool Engine::Clean()
 {
     TextureManager::GetInstance()->Clean() ;
     SDL_DestroyRenderer(renderer) ;
-    SDL_DestroyWindow(window) ;
-    IMG_Quit() ;
-    TTF_Quit() ;
-    SDL_Quit() ;
 }
 
 void Engine::Quit()
 {
+    SDL_DestroyWindow(window) ;
+    IMG_Quit() ;
+    TTF_Quit() ;
+    SDL_Quit() ;
     exit(0) ;
 }
 
 bool IsIntersecting(int X , int Y , int CurX , int CurY)
 {
     if (CurX >= X and CurX <= X + 30 and CurY >= Y and CurY <= Y + 30)
-        return true ;
+        return true;
     CurX += 50 ;
     if (CurX >= X and CurX <= X + 30 and CurY >= Y and CurY <= Y + 30)
-        return true ;
+        return true;
     CurX -= 50 ;
     CurY += 50 ;
     if (CurX >= X and CurX <= X + 30 and CurY >= Y and CurY <= Y + 30)
-        return true ;
+        return true;
     CurX += 50 ;
     if (CurX >= X and CurX <= X + 30 and CurY >= Y and CurY <= Y + 30)
-        return true ;
-    return false ;
+        return true;
+    return false;
 }
 
-void Restart()
-{
-    SDL_Event event ;
-    SDL_PollEvent(&event) ;
-    int ok = 0 ;
-    while (1)
-    {
-        if (GetAsyncKeyState('R') & 0x8000)
-        {
-            ok = -1 ;
-            break ;
-        }
-        if (GetAsyncKeyState('Q') & 0x8000)
-        {
-            ok = 1 ;
-            break ;
-        }
-        ok ++ ;
-        Engine::GetInstance()->Render() ;
-    }
-    if (ok == -1)
-    {
-        Engine::GetInstance()->Clean() ;
-        Engine::GetInstance()->Init() ;
-    }
-    if (ok == 1)
-    {
-        Engine::GetInstance()->Quit() ;
-    }
-}
-
-void Pause()
-{
-    while (1)
-    {
-        if ((GetAsyncKeyState('P') & 0x8000) and (!isCooldownActive()))
-        {
-            isButtonBlocked = false ;
-            startCooldown() ;
-            break ;
-        }
-    }
-}
-
-bool DoesShipCrashes()
+bool Engine::DoesShipCrashes()
 {
     for (auto i : ast)
     {
         int CurX , CurY ;
         CurX = i->CurX ;
         CurY = i->CurY ;
-        if (CurX >= x and CurX <= x + 80 and CurY >= y and CurY <= y + 80)
+        if (CurX >= ShipPositionX and CurX <= ShipPositionX + 80 and CurY >= ShipPositionY and CurY <= ShipPositionY + 80)
             return true ;
         CurX += 50 ;
-        if (CurX >= x and CurX <= x + 80 and CurY >= y and CurY <= y + 80)
+        if (CurX >= ShipPositionX and CurX <= ShipPositionX + 80 and CurY >= ShipPositionY and CurY <= ShipPositionY + 80)
             return true ;
         CurX -= 50 ;
         CurY += 50 ;
-        if (CurX >= x and CurX <= x + 80 and CurY >= y and CurY <= y + 80)
+        if (CurX >= ShipPositionX and CurX <= ShipPositionX + 80 and CurY >= ShipPositionY and CurY <= ShipPositionY + 80)
             return true ;
         CurX += 50 ;
-        if (CurX >= x and CurX <= x + 80 and CurY >= y and CurY <= y + 80)
+        if (CurX >= ShipPositionX and CurX <= ShipPositionX + 80 and CurY >= ShipPositionY and CurY <= ShipPositionY + 80)
             return true ;
-        // cout << CurX << " " << CurY << " " << x << " " << y << endl ;
-        // return false ;
     }
     return false ;
 }
@@ -215,35 +180,25 @@ bool DoesShipCrashes()
 void Engine::Update()
 {
     player->Update(0) ;
-    // system("pause") ;
-    if ((GetAsyncKeyState('P') & 0x8000) and (!isCooldownActive()))
-    {
-        isButtonBlocked = false ;
-        startCooldown() ;
-        Pause() ;
-    }
-    if (ast.size() == 0)
+    if (!ast.size() and MainMenu == false)
     {
         Won = true ;
+        Game::GetInstance()->StartCoolDown() ;
         Engine::GetInstance()->Render() ;
-        Restart() ;
+        Game::GetInstance()->Reset() ;
     }
-    // cout << "I am here" << endl ;
-    if (DoesShipCrashes() == true)
+    if (DoesShipCrashes())
     {
-        // GameOver() ;
-        // cout << "Crashed" << endl ;
-        // TextureManager::GetInstance()->Draw("gameover" , 0 , 0 , 2200 , 1208) ;
         GameOver = true ;
+        Game::GetInstance()->StartCoolDown() ;
         Engine::GetInstance()->Render() ;
-        Restart() ;
+        Game::GetInstance()->Reset() ;
     }
     for (int i = 0 ; i < shots.size() ; i ++ )
     {
         int ok = -1 ;
         for (int j = 0 ; j < ast.size() ; j ++ )
         {
-            // cout << "Before Crash Update:: " << ast.size() << " " << shots.size() << endl ;
             if (IsIntersecting(shots[i]->x , shots[i]->y , ast[j]->CurX , ast[j]->CurY))
             {
                 ok = j ;
@@ -252,40 +207,27 @@ void Engine::Update()
         }
         if (ok != -1)
         {
-            cout << ast[ok]->CurX << " " << ast[ok]->CurY << " " << shots[i]->x << " " << shots[i]->y << endl ;
-            cout << ast.size() << " " << shots.size() << endl ;
             ast.erase(ast.begin() + ok) ;
-            cout << ast.size() << endl ;
-            // system("pause") ;
             shots[i]->Delete(shots[i]->id) ;
             shots.erase(shots.begin() + i) ;
             i -- ;
             score ++ ;
-            // system("pause") ;
         }
     }
-    // cout << " ! " << endl ;
     for (int i = 0 ; i < shots.size() ; i ++ )
     {
         int a , b ;
-        // a = shots[i]->x ;
-        // b = shots[i]->y
         if (shots[i]->x < 0 or shots[i]->y < 0 or shots[i]->x >= 1000 or shots[i]->y >= 1000)
         {
             shots[i]->Delete(shots[i]->id) ;
-            // cout << i << endl ;
             shots.erase(shots.begin() , shots.begin() + i + 1) ;
             i -- ;
             continue ;
         }
     }
-    /*
-    asteroid->Update(0) ;
-    ast->Update(0) ;
-    */
 }
 
-void ScoreDraw()
+void Engine::ScoreDraw()
 {
     TextureManager::GetInstance()->Draw("score" , 0 , 0 , 300 , 169) ;
     int X = 210 ;
@@ -316,7 +258,6 @@ void ScoreDraw()
             v.push_back("n9") ;
         cnt /= 10 ;
     }
-    cout << v.size() << endl ;
     for (int i = v.size() - 1 ; i >= 0 ; i -- )
     {
         TextureManager::GetInstance()->DrawFrame(v[i] , X , 0 , 300 , 400 , 0 , 0 , 0) ;
@@ -329,62 +270,97 @@ void Engine::Render()
     SDL_SetRenderDrawColor(renderer , 125 , 55 , 254 , 255) ;
     SDL_RenderClear(renderer) ;
     TextureManager::GetInstance()->Draw("background" , 0 , 0 , 1000 , 1000) ;
-    // TextureManager::GetInstance()->Draw("player" , 100 , 200 , 512 , 512 ) ;
-    player->Draw() ;
-    for (auto i : ast)
+    if (MainMenu)
     {
-        i->Draw() ;
+        MainMenu::GetInstance()->Draw() ;
+        int check = MainMenu::GetInstance()->Check() ;
+        if (check == 1)
+        {
+            AsteroidsSpeed = 5 ;
+            NumberOfAsteroids = 10 ;
+            MainMenu = false ;
+            CreateAsteroids() ;
+        }
+        else if (check == 2)
+        {
+            AsteroidsSpeed = 10 ;
+            NumberOfAsteroids = 15 ;
+            MainMenu = false ;
+            CreateAsteroids() ;
+        }
+        else if (check == 3)
+        {
+            AsteroidsSpeed = 15 ;
+            NumberOfAsteroids = 20 ;
+            MainMenu = false ;
+            CreateAsteroids() ;
+        }
     }
-    for (auto i : shots)
+    else
     {
-        i->Draw() ;
+        player->Draw() ;
+        for (auto i : ast)
+        {
+            i->Draw() ;
+        }
+        for (auto i : shots)
+        {
+            i->Draw() ;
+        }
+        ScoreDraw() ;
+        if (GameOver == true)
+            TextureManager::GetInstance()->Draw("gameover" , 0 , 300 , 2200 , 680) ;
+        if (Won == true)
+            TextureManager::GetInstance()->Draw("congragulations" , 250 , 300 , 360 , 360) ;
+        if (Menu == true)
+        {
+            TextureManager::GetInstance()->Draw("Shadow" , 0 , 0 , 1000 , 1000 ) ;
+            TextureManager::GetInstance()->Draw("Resume" , 300 , 300 , 940 , 210 ) ;
+            TextureManager::GetInstance()->Draw("Restart" , 300 , 500 , 940 , 210 ) ;
+            TextureManager::GetInstance()->Draw("Quit" , 300 , 700 , 940 , 210 ) ;
+        }
     }
-    ScoreDraw() ;
-    if (GameOver == true)
-        TextureManager::GetInstance()->Draw("gameover" , 0 , 300 , 2200 , 680) ;
-    if (Won == true)
-        TextureManager::GetInstance()->Draw("congragulations" , 250 , 300 , 360 , 360) ;
-    // TextureManager::GetInstance()->Draw("gameover" , 0 , 0 , 2200 , 1208) ;
     SDL_RenderPresent(renderer) ;
 }
 
-void PlayersMovement()
+void Engine::PlayersMovement()
 {
     int angle ;
     if (GetAsyncKeyState('W') & 0x8000)
     {
-        y -= 5 ;
+        ShipPositionY -= 5 ;
         angle = player->Angle ;
-        player = new Warrior(new Properties("player" , x , y , 512 , 512)) ;
+        player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
         player->Angle = angle ;
     }
     if (GetAsyncKeyState('A') & 0x8000)
     {
-        x -= 5 ;
+        ShipPositionX -= 5 ;
         angle = player->Angle ;
-        player = new Warrior(new Properties("player" , x , y , 512 , 512)) ;
+        player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
         player->Angle = angle ;
     }
     if (GetAsyncKeyState('S') & 0x8000)
     {
-        y += 5 ;
+        ShipPositionY += 5 ;
         angle = player->Angle ;
-        player = new Warrior(new Properties("player" , x , y , 512 , 512)) ;
+        player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
         player->Angle = angle ;
     }
     if (GetAsyncKeyState('D') & 0x8000)
     {
-        x += 5 ;
+        ShipPositionX += 5 ;
         angle = player->Angle ;
-        player = new Warrior(new Properties("player" , x , y , 512 , 512)) ;
+        player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
         player->Angle = angle ;
     }
     if (GetAsyncKeyState(VK_LEFT) & 0x8000)
         player->Angle -= 5 ;
     if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
         player->Angle += 5 ;
-    if (GetKeyState(VK_RETURN) & 0x8000)
+    if (GetAsyncKeyState(VK_RETURN) & 0x8001 and !(EnterButton->IsCoolActive()))
     {
+        EnterButton->StartCoolDown() ;
         shot = new Shooting ;
         double X , Y , pi , ans , a , b ;
         pi = 2 * acos(0.0) ;
@@ -392,41 +368,38 @@ void PlayersMovement()
         a = a * pi / 180.0 ;
         Y = cos(a) ;
         X = sin(a) ;
-        // cout << X << " " << Y << " " << pi << " " << player->Angle << endl ;
         a = X * 50 ;
         b = Y * 50 ;
         b *= -1 ;
-        // a *= -1 ;
         X *= 10 ;
         Y *= -10 ;
-        shot->CreateShot("shoot" , x + a + 30 , y + b + 30 , X , Y , 800 , 800 ) ;
+        shot->CreateShot("shoot" , ShipPositionX + a + 30 , ShipPositionY + b + 30 , X , Y , 800 , 800 ) ;
         shots.push_back(shot) ;
     }
 }
 
-void AsteroidsMovement()
+void Engine::AsteroidsMovement()
 {
     for (int i = 0 ; i < ast.size() ; i ++ )
     {
-        int x , y , x1 , y1 ;
-        /// cout << ast->CurX << " " << ast->CurY << " " << ast->DestX << " " << ast->DestY << endl ;
-        x = ast[i]->CurX + ast[i]->DestX ;
-        if (x < 0 or x >= 1000)
-            ast[i]->DestX *= -1 , x = ast[i]->CurX + ast[i]->DestX ;
-        y = ast[i]->CurY + ast[i]->DestY ;
-        if (y < 0 or y >= 1000)
-            ast[i]->DestY *= -1 , y = ast[i]->CurY + ast[i]->DestY ;
+        int MoveToX , MoveToY , x1 , y1 ;
+        MoveToX = ast[i]->CurX + ast[i]->DestX ;
+        if (MoveToX < 0 or MoveToX >= WINDOW_SIZE)
+            ast[i]->DestX *= -1 , MoveToX = ast[i]->CurX + ast[i]->DestX ;
+        MoveToY = ast[i]->CurY + ast[i]->DestY ;
+        if (MoveToY < 0 or MoveToY >= WINDOW_SIZE)
+            ast[i]->DestY *= -1 , MoveToY = ast[i]->CurY + ast[i]->DestY ;
         x1 = ast[i]->DestX ;
         y1 = ast[i]->DestY ;
-        ast[i] = new Asteroids(new Properties("asteroid" , x , y , 800 , 800)) ;
-        ast[i]->CurX = x ;
-        ast[i]->CurY = y ;
+        ast[i] = new Asteroids(new Properties("asteroid" , MoveToX , MoveToY , 800 , 800)) ;
+        ast[i]->CurX = MoveToX ;
+        ast[i]->CurY = MoveToY ;
         ast[i]->DestX = x1 ;
         ast[i]->DestY = y1 ;
     }
 }
 
-void ShotingMovement()
+void Engine::ShotingMovement()
 {
     for (auto i : shots)
     {
@@ -436,13 +409,9 @@ void ShotingMovement()
 
 void Engine::Events()
 {
-    SDL_Event event ;
-    SDL_PollEvent(&event) ;
+    cout << "Events Happening :: " << endl ;
+    Game::GetInstance()->CheckEvents() ;
     PlayersMovement() ;
     AsteroidsMovement() ;
     ShotingMovement() ;
-    if (event.type == SDL_QUIT)
-    {
-        Quit() ;
-    }
 }
