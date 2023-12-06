@@ -52,6 +52,8 @@ void TextureManager::Draw(string id, int x, int y, int width, int height, SDL_Re
         destinationRect = {x , y , 200 , 112} ;
     if (id == "button1" or id == "button2" or id == "button3" or id == "Resume" or id == "Restart" or id == "Quit")
         destinationRect = {x , y , 400 , 100} ;
+    if (id == "Shadow2")
+        destinationRect = {x , y , 400 , 95} ;
     SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer() , m_TextureMap[id] , &sourceRect , &destinationRect , 0 , nullptr , flip) ;
 }
 

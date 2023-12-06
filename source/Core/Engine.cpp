@@ -30,6 +30,10 @@ bool Engine::BuilWindow()
     }
     MainMenu = true ;
     Menu = false ;
+    Levels.clear() ;
+    Levels[1] = true ;
+    NextLevel = 2 ;
+    FINAL = false ;
     return true ;
 }
 
@@ -78,6 +82,8 @@ bool Engine::Init()
     TextureManager::GetInstance()->Load("Resume" , "Assets/Resume.png") ;
     TextureManager::GetInstance()->Load("Restart" , "Assets/Restart.png") ;
     TextureManager::GetInstance()->Load("Quit" , "Assets/Quit.png") ;
+    TextureManager::GetInstance()->Load("Shadow" , "Assets/shadow.png") ;
+    TextureManager::GetInstance()->Load("Shadow2" , "Assets/shadow2.png") ;
 
     player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
     EnterButton = new ButtonCoolDown() ;
@@ -183,6 +189,8 @@ void Engine::Update()
     if (!ast.size() and MainMenu == false)
     {
         Won = true ;
+        Levels[NextLevel] = true ;
+        NextLevel ++ ;
         Game::GetInstance()->StartCoolDown() ;
         Engine::GetInstance()->Render() ;
         Game::GetInstance()->Reset() ;
@@ -270,25 +278,29 @@ void Engine::Render()
     SDL_SetRenderDrawColor(renderer , 125 , 55 , 254 , 255) ;
     SDL_RenderClear(renderer) ;
     TextureManager::GetInstance()->Draw("background" , 0 , 0 , 1000 , 1000) ;
+    if (FINAL)
+    {
+        player->Draw() ;
+    }
     if (MainMenu)
     {
         MainMenu::GetInstance()->Draw() ;
         int check = MainMenu::GetInstance()->Check() ;
-        if (check == 1)
+        if (check == 1 and Levels[1] == true)
         {
             AsteroidsSpeed = 5 ;
             NumberOfAsteroids = 10 ;
             MainMenu = false ;
             CreateAsteroids() ;
         }
-        else if (check == 2)
+        else if (check == 2 and Levels[2] == true)
         {
             AsteroidsSpeed = 10 ;
             NumberOfAsteroids = 15 ;
             MainMenu = false ;
             CreateAsteroids() ;
         }
-        else if (check == 3)
+        else if (check == 3 and Levels[3] == true)
         {
             AsteroidsSpeed = 15 ;
             NumberOfAsteroids = 20 ;

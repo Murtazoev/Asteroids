@@ -13,6 +13,7 @@
 #include<cmath>
 #include<algorithm>
 #include<MainMenu.h>
+#include<map>
 
 class Engine
 {
@@ -33,10 +34,11 @@ class Engine
         void PlayersMovement() ;
         void ShotingMovement() ;
         void AsteroidsMovement() ;
-        int NumberOfAsteroids , AsteroidsSpeed ;
+        int NumberOfAsteroids , AsteroidsSpeed , NextLevel ;
         bool BuilWindow() ;
-        bool MainMenu , Menu ;
+        bool MainMenu , Menu , FINAL ;
         void CreateAsteroids() ;
+        map < int , bool > Levels ;
         SDL_Renderer* GetRenderer()
         {
             return renderer ;

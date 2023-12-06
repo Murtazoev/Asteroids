@@ -11,9 +11,16 @@ MainMenu::MainMenu()
 
 void MainMenu::Draw()
 {
+    TextureManager::GetInstance()->Draw("Shadow" , 0 , 0 , 1000 , 1000) ;
     TextureManager::GetInstance()->Draw("button1" , 300 , 300 , 940 , 210) ;
+    if (Engine::GetInstance()->Levels[1] == false)
+        TextureManager::GetInstance()->Draw("Shadow2" , 300 , 300 , 940 , 210) ;
     TextureManager::GetInstance()->Draw("button2" , 300 , 500 , 940 , 210) ;
+    if (Engine::GetInstance()->Levels[2] == false)
+        TextureManager::GetInstance()->Draw("Shadow2" , 300 , 500 , 940 , 210) ;
     TextureManager::GetInstance()->Draw("button3" , 300 , 700 , 940 , 210) ;
+    if (Engine::GetInstance()->Levels[3] == false)
+        TextureManager::GetInstance()->Draw("Shadow2" , 300 , 700 , 940 , 210) ;
 }
 
 int MainMenu::Check()
