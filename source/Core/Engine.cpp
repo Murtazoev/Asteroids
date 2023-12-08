@@ -32,14 +32,15 @@ bool Engine::BuilWindow()
     Menu = false ;
     Levels.clear() ;
     Levels[1] = true ;
-    NextLevel = 2 ;
-    FINAL = false ;
+    level4 = false ;
+    finall = new Final ;
     return true ;
 }
 
 
 bool Engine::Init()
 {
+    level4 = false ;
     ShipWidth = ShipHeight = 512 ;
     // NumberOfAsteroids = 1 ;
     score = 0 ;
@@ -79,11 +80,13 @@ bool Engine::Init()
     TextureManager::GetInstance()->Load("button1" , "Assets/button1.png") ;
     TextureManager::GetInstance()->Load("button2" , "Assets/button2.png") ;
     TextureManager::GetInstance()->Load("button3" , "Assets/button3.png") ;
+    TextureManager::GetInstance()->Load("button4" , "Assets/button4.png") ;
     TextureManager::GetInstance()->Load("Resume" , "Assets/Resume.png") ;
     TextureManager::GetInstance()->Load("Restart" , "Assets/Restart.png") ;
     TextureManager::GetInstance()->Load("Quit" , "Assets/Quit.png") ;
     TextureManager::GetInstance()->Load("Shadow" , "Assets/shadow.png") ;
     TextureManager::GetInstance()->Load("Shadow2" , "Assets/shadow2.png") ;
+    TextureManager::GetInstance()->Load("Enemy" , "Assets/final_enemy.png") ;
 
     player = new Warrior(new Properties("player" , ShipPositionX , ShipPositionY , ShipWidth , ShipHeight)) ;
     EnterButton = new ButtonCoolDown() ;
@@ -183,24 +186,35 @@ bool Engine::DoesShipCrashes()
     return false ;
 }
 
+void Engine::GameOvver()
+{
+    cout << "Salom" << endl ;
+    GameOver = true ;
+    Game::GetInstance()->StartCoolDown() ;
+    Render() ;
+    Game::GetInstance()->Reset() ;
+}
+
+void Engine::GameWon()
+{
+    Won = true ;
+    Levels[CurrentLevel + 1] = true ;
+    Game::GetInstance()->StartCoolDown() ;
+    Render() ;
+    Game::GetInstance()->Reset() ;
+}
+
 void Engine::Update()
 {
     player->Update(0) ;
+    // finall->Update() ;
     if (!ast.size() and MainMenu == false)
     {
-        Won = true ;
-        Levels[NextLevel] = true ;
-        NextLevel ++ ;
-        Game::GetInstance()->StartCoolDown() ;
-        Engine::GetInstance()->Render() ;
-        Game::GetInstance()->Reset() ;
+        GameWon() ;
     }
     if (DoesShipCrashes())
     {
-        GameOver = true ;
-        Game::GetInstance()->StartCoolDown() ;
-        Engine::GetInstance()->Render() ;
-        Game::GetInstance()->Reset() ;
+        GameOvver() ;
     }
     for (int i = 0 ; i < shots.size() ; i ++ )
     {
@@ -278,11 +292,26 @@ void Engine::Render()
     SDL_SetRenderDrawColor(renderer , 125 , 55 , 254 , 255) ;
     SDL_RenderClear(renderer) ;
     TextureManager::GetInstance()->Draw("background" , 0 , 0 , 1000 , 1000) ;
-    if (FINAL)
+    if (level4)
     {
+        ScoreDraw() ;
         player->Draw() ;
+        finall->Draw() ;
+        if (GameOver == true)
+        {
+            cout << "Game Over" << endl ;
+            TextureManager::GetInstance()->Draw("gameover" , 0 , 300 , 2200 , 680) ;
+            // system("pause") ;
+            // return ;
+        }
+        else if (Won == true)
+            TextureManager::GetInstance()->Draw("congragulations" , 250 , 300 , 360 , 360) ;
+        else
+            finall->Update() ;
+        for (auto i : shots)
+            i->Draw() ;
     }
-    if (MainMenu)
+    else if (MainMenu)
     {
         MainMenu::GetInstance()->Draw() ;
         int check = MainMenu::GetInstance()->Check() ;
@@ -291,6 +320,7 @@ void Engine::Render()
             AsteroidsSpeed = 5 ;
             NumberOfAsteroids = 10 ;
             MainMenu = false ;
+            CurrentLevel = 1 ;
             CreateAsteroids() ;
         }
         else if (check == 2 and Levels[2] == true)
@@ -298,6 +328,7 @@ void Engine::Render()
             AsteroidsSpeed = 10 ;
             NumberOfAsteroids = 15 ;
             MainMenu = false ;
+            CurrentLevel = 2 ;
             CreateAsteroids() ;
         }
         else if (check == 3 and Levels[3] == true)
@@ -305,7 +336,13 @@ void Engine::Render()
             AsteroidsSpeed = 15 ;
             NumberOfAsteroids = 20 ;
             MainMenu = false ;
+            CurrentLevel = 3 ;
             CreateAsteroids() ;
+        }
+        else if (check == 4 and Levels[4] == true) //and Levels[4] == true)
+        {
+            level4 = true ;
+            finall->Init() ;
         }
     }
     else
@@ -421,7 +458,7 @@ void Engine::ShotingMovement()
 
 void Engine::Events()
 {
-    cout << "Events Happening :: " << endl ;
+    // cout << "Events Happening :: " << endl ;
     Game::GetInstance()->CheckEvents() ;
     PlayersMovement() ;
     AsteroidsMovement() ;

@@ -59,7 +59,7 @@
 	<MainMenu.h>
 	<iostream>
 
-1701864121 d:\projects\asteroids\source\core\engine.h
+1701990113 d:\projects\asteroids\source\core\engine.h
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<SDL2/SDL_ttf.h>
@@ -73,8 +73,9 @@
 	<algorithm>
 	<MainMenu.h>
 	<map>
+	<Final.h>
 
-1701791252 source:d:\projects\asteroids\source\core\engine.cpp
+1701996377 source:d:\projects\asteroids\source\core\engine.cpp
 	"Engine.h"
 	<TextureManager.h>
 	<windows.h>
@@ -85,7 +86,7 @@
 	<iostream>
 	<SDL2/SDL.h>
 
-1701791858 source:d:\projects\asteroids\source\graphics\texturemanager.cpp
+1701946715 source:d:\projects\asteroids\source\graphics\texturemanager.cpp
 	"TextureManager.h"
 	<Engine.h>
 
@@ -141,10 +142,10 @@
 	<thread>
 	<iostream>
 
-1701763684 source:d:\projects\asteroids\source\core\game.cpp
+1701988141 source:d:\projects\asteroids\source\core\game.cpp
 	"Game.h"
 
-1701514689 d:\projects\asteroids\source\core\game.h
+1701949868 d:\projects\asteroids\source\core\game.h
 	<iostream>
 	<TextureManager.h>
 	<ButtonCoolDown.h>
@@ -163,6 +164,28 @@
 	<TextureManager.h>
 	<Engine.h>
 
-1701791304 source:d:\projects\asteroids\source\core\mainmenu.cpp
+1701944987 source:d:\projects\asteroids\source\core\mainmenu.cpp
 	"MainMenu.h"
+
+1701995880 d:\projects\asteroids\source\core\final.h
+	<TextureManager.h>
+	<thread>
+	<conio.h>
+	<iostream>
+	<Asteroids.h>
+	<deque>
+	<Shooting.h>
+
+1701996231 source:d:\projects\asteroids\source\core\final.cpp
+	"Final.h"
+	<Engine.h>
+	<cmath>
+	<Game.h>
+
+1701966443 d:\projects\asteroids\\final.h
+
+1701966439 source:d:\projects\asteroids\final.cpp
+	"Final.h"
+
+1701966443 d:\projects\asteroids\final.h
 

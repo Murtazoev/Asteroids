@@ -14,6 +14,7 @@
 #include<algorithm>
 #include<MainMenu.h>
 #include<map>
+#include<Final.h>
 
 class Engine
 {
@@ -34,11 +35,14 @@ class Engine
         void PlayersMovement() ;
         void ShotingMovement() ;
         void AsteroidsMovement() ;
-        int NumberOfAsteroids , AsteroidsSpeed , NextLevel ;
+        int NumberOfAsteroids , AsteroidsSpeed , CurrentLevel , WINDOW_SIZE = 1000 , ShipPositionX , ShipPositionY , score ;
         bool BuilWindow() ;
-        bool MainMenu , Menu , FINAL ;
+        bool MainMenu , Menu , level4 , GameOver ;
+        void GameOvver() ;
+        void GameWon() ;
         void CreateAsteroids() ;
         map < int , bool > Levels ;
+        deque < Shooting* > shots ;
         SDL_Renderer* GetRenderer()
         {
             return renderer ;
@@ -46,18 +50,17 @@ class Engine
 
     private:
         Engine(){}
-        bool m_IsRunnin , GameOver , Won ;
+        bool m_IsRunnin , Won ;
         SDL_Renderer* renderer ;
         SDL_Window* window ;
         static Engine* s_Instance;
-        int WINDOW_SIZE = 1000;
         int PLAYER_INITIAL_POSITION = WINDOW_SIZE / 2;
-        int ShipPositionX , ShipPositionY , score , ShipWidth , ShipHeight;
+        int ShipWidth , ShipHeight;
         deque < Asteroids* > ast ;
-        deque < Shooting* > shots ;
         ButtonCoolDown* EnterButton = nullptr ;
         Warrior* player = nullptr ;
         Asteroids* asteroid = nullptr ;
+        Final* finall = nullptr ;
         Shooting* shot = nullptr ;
 };
 

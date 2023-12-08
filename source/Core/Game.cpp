@@ -51,6 +51,7 @@ void Game::Pause()
 
 void Game::Reset()
 {
+    cout << "Game Reset" << endl ;
     cooldownEndTime = chrono::steady_clock::now() + chrono::seconds(2);
     while (1)
     {
